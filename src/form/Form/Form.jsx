@@ -1,17 +1,30 @@
 import { FormProvider, useForm } from 'react-hook-form';
-import StyledForm from './Form.styled';
-import Input from '../../form/Input/Input';
-import ErrorMessage from '../../Error/ErrorMessage.component';
 import { styled } from 'styled-components';
 import { useEffect, useState } from 'react';
+import ErrorMessage from '../../Error/ErrorMessage.component';
+import Input from '../Input/Input';
 
-const Button = styled.button`
+const FormContainer = styled.div`
+	display: flex;
+	flex-align: center;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 5px;
+`;
+
+const StyledButton = styled.button`
 	width: 10vw;
 	color: black;
 `;
 
+const StyledPre = styled.pre`
+	width: 20vw;
+	height: 30vh;
+`;
+
 const Form = () => {
-	const [formData, setFormData] = useState({});
+	const [formData, setFormData] = useState(null);
 	const { handleSubmit, formState, reset, ...methods } = useForm({
 		defaultValues: {
 			firstName: '',
@@ -31,59 +44,70 @@ const Form = () => {
 		}
 	}, [formState, formData, reset]);
 
-	console.log(formData);
-
 	return (
-		<FormProvider {...methods}>
-			<StyledForm>
-				<Input
-					name='firstName'
-					placeholder='First Name'
-					validation={{
-						minLength: {
-							value: 4,
-							message: 'Please enter a name longer than 4 character',
-						},
-					}}
-				/>
-				<ErrorMessage errors={formState.errors} name='firstName' />
+		<>
+			<FormProvider {...methods}>
+				<FormContainer>
+					<div>
+						<Input
+							name='firstName'
+							placeholder='First Name'
+							validation={{
+								minLength: {
+									value: 4,
+									message: 'Please enter a name longer than 4 character',
+								},
+							}}
+						/>
+						<ErrorMessage errors={formState.errors} name='firstName' />
+					</div>
 
-				<Input
-					name='lastName'
-					placeholder='Last Name'
-					validation={{
-						minLength: {
-							value: 4,
-							message: 'Please enter a surname longer than 4 character',
-						},
-					}}
-				/>
-				<ErrorMessage errors={formState.errors} name='lastName' />
+					<div>
+						<Input
+							name='lastName'
+							placeholder='Last Name'
+							validation={{
+								minLength: {
+									value: 4,
+									message: 'Please enter a surname longer than 4 character',
+								},
+							}}
+						/>
+						<ErrorMessage errors={formState.errors} name='lastName' />
+					</div>
 
-				<Input
-					name='email'
-					placeholder='Email'
-					validation={{
-						required: 'Please enter a valid email',
-					}}
-				/>
-				<ErrorMessage errors={formState.errors} name='email' />
+					<div>
+						<Input
+							name='email'
+							placeholder='Email'
+							validation={{
+								required: 'Please enter a valid email',
+							}}
+						/>
+						<ErrorMessage errors={formState.errors} name='email' />
+					</div>
 
-				<Input
-					name='mobileNumber'
-					placeholder='Mobile Number'
-					validation={{
-						pattern: {
-							value: /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/,
-							message: 'Please enter a mobile number in format 123-456-7890',
-						},
-					}}
-				/>
-				<ErrorMessage errors={formState.errors} name='mobileNumber' />
-
-				<Button onClick={handleSubmit(onSubmit)}>Submit</Button>
-			</StyledForm>
-		</FormProvider>
+					<div>
+						<Input
+							name='mobileNumber'
+							placeholder='Mobile Number'
+							validation={{
+								pattern: {
+									value: /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/,
+									message:
+										'Please enter a mobile number in format 123-456-7890',
+								},
+							}}
+						/>
+						<ErrorMessage errors={formState.errors} name='mobileNumber' />
+					</div>
+					<StyledButton onClick={handleSubmit(onSubmit)}>Submit</StyledButton>
+					{formData && (
+						<StyledPre>{JSON.stringify(formData, null, 2)}</StyledPre>
+					)}
+				</FormContainer>
+			</FormProvider>
+		</>
 	);
 };
 
